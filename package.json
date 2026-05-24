@@ -1,0 +1,13 @@
+{
+  "name": "notif",
+  "version": "1.0.0",
+  "description": "A **shared backend microservice** for a delivery app that accepts notification requests from other systems and sends email alerts to users.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
