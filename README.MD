@@ -4,33 +4,28 @@ A **shared backend microservice** for a delivery app that accepts notification r
 
 Built with **Node.js · TypeScript · Express · MySQL (XAMPP) · Nodemailer**
 
-
-
 ## 🚀 Setup
 
 ### 1. Install dependencies
+
 ```bash
 npm install
 ```
 
 ### 2. Set up the database (XAMPP)
+
 1. Open **XAMPP Control Panel** → Start **Apache** and **MySQL**
 2. Go to [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
 3. Click **New** → name it `notification_db` → click **Create**
-4. Click on `notification_db` → **Import** tab → choose `database/schema.sql` → click **Go**
 
-### 3. Configure environment
-```bash
-cp .env.example .env
-# Edit .env with your SMTP credentials
-```
+### 3. Run in development mode
 
-### 4. Run in development mode
 ```bash
 npm run dev
 ```
 
 On successful startup you will see:
+
 ```
 [INFO] MySQL database connection established.
 [INFO] SMTP connection verified successfully.
@@ -45,6 +40,7 @@ On successful startup you will see:
 Any user registered at `https://users-api-we0n.onrender.com/api/users` can send requests.
 
 **Send your `_id` as the Bearer token:**
+
 ```
 Authorization: Bearer 6a0b3d00c53295c94da08c66
 ```
@@ -56,6 +52,7 @@ The system caches the user list every **5 minutes** and auto-refreshes when a ne
 ## 📡 API Reference
 
 All protected routes require:
+
 ```
 Authorization: Bearer <user _id from /api/users>
 ```
@@ -63,9 +60,11 @@ Authorization: Bearer <user _id from /api/users>
 ---
 
 ### `GET /api/health` — Public
+
 Check if the service is running. No token required.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -80,6 +79,7 @@ Check if the service is running. No token required.
 ### `POST /api/notifications` — Send a Notification 🔒
 
 **Body:**
+
 ```json
 {
   "recipientEmail": "juan@example.com",
@@ -90,16 +90,17 @@ Check if the service is running. No token required.
 }
 ```
 
-| Field | Required | Description |
-|---|---|---|
-| `recipientEmail` | ✅ | Email address to send to |
-| `recipientName` | ❌ | Display name of the recipient |
-| `subject` | ✅ | Email subject line |
-| `body` | ✅ | Email body text |
-| `sourceSystem` | ✅ | Name of the system sending this request |
-| `channel` | ❌ | `EMAIL` (default), `SMS`, `PUSH` |
+| Field            | Required | Description                             |
+| ---------------- | -------- | --------------------------------------- |
+| `recipientEmail` | ✅       | Email address to send to                |
+| `recipientName`  | ❌       | Display name of the recipient           |
+| `subject`        | ✅       | Email subject line                      |
+| `body`           | ✅       | Email body text                         |
+| `sourceSystem`   | ✅       | Name of the system sending this request |
+| `channel`        | ❌       | `EMAIL` (default), `SMS`, `PUSH`        |
 
 **201 — Sent:**
+
 ```json
 {
   "success": true,
@@ -110,6 +111,7 @@ Check if the service is running. No token required.
 ```
 
 **409 — Duplicate blocked:**
+
 ```json
 {
   "success": false,
@@ -120,6 +122,7 @@ Check if the service is running. No token required.
 ```
 
 **401 — Unauthorized:**
+
 ```json
 {
   "success": false,
@@ -133,12 +136,12 @@ Check if the service is running. No token required.
 
 Optional query params:
 
-| Param | Description |
-|---|---|
-| `page` | Page number (default: 1) |
-| `limit` | Items per page (default: 20, max: 100) |
-| `status` | `PENDING` / `SENT` / `FAILED` / `DUPLICATE` |
-| `recipientEmail` | Filter by recipient |
+| Param            | Description                                 |
+| ---------------- | ------------------------------------------- |
+| `page`           | Page number (default: 1)                    |
+| `limit`          | Items per page (default: 20, max: 100)      |
+| `status`         | `PENDING` / `SENT` / `FAILED` / `DUPLICATE` |
+| `recipientEmail` | Filter by recipient                         |
 
 ```
 GET /api/notifications?status=SENT&page=1&limit=10
@@ -147,25 +150,25 @@ GET /api/notifications?status=SENT&page=1&limit=10
 ---
 
 ### `GET /api/notifications/:id` — Get One Notification + Logs 🔒
+
 Returns the notification record and its full audit trail.
 
 ---
 
 ### `GET /api/notifications/:id/logs` — Get Audit Logs 🔒
+
 Returns all log events for a specific notification.
 
 **Log events:**
 
-| Event | Meaning |
-|---|---|
-| `RECEIVED` | Request accepted and saved |
-| `EMAIL_SENT` | Email delivered successfully |
-| `EMAIL_FAILED` | Email delivery failed |
+| Event               | Meaning                        |
+| ------------------- | ------------------------------ |
+| `RECEIVED`          | Request accepted and saved     |
+| `EMAIL_SENT`        | Email delivered successfully   |
+| `EMAIL_FAILED`      | Email delivery failed          |
 | `DUPLICATE_BLOCKED` | Duplicate request was rejected |
 
 ---
-
-
 
 ## 🔗 How Other Systems Connect
 
@@ -175,7 +178,7 @@ Any other system in the project (ordering system, legacy system, rider app, etc.
 2. Calling:
 
 ```http
-POST http://localhost:3000/api/notifications
+POST http://localhost:3001/api/notifications
 Authorization: Bearer <user _id>
 Content-Type: application/json
 
@@ -188,3 +191,4 @@ Content-Type: application/json
 }
 
 
+```
